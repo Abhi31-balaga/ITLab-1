@@ -15,7 +15,11 @@ app.use(cookieParser());
 app.use("/api/auth", authRoutes);
 
 app.get("/", (req, res) => {
-  res.send("Hello world");
+  res.send("Hello world!");
+});
+
+app.get("/health", (req, res) => {
+  res.send("health OK!");
 });
 
 app.listen(PORT, () => {
