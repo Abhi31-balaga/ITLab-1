@@ -1,0 +1,78 @@
+import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
+
+const JWT_SECRET = process.env.JWT_SECRET;
+
+export const registerUser = async (req, res) => {
+  try {
+    const { email, password } = req.body;
+    if (!email || !password)
+      return res.status(400).json({ message: "All fields are required" });
+    //check if user exists in DB by his email
+    //const userExists = userDB.find((user) => user.email === email);
+
+    const normalizedEmail = email.trim().toLowerCase();
+
+    if (userExists)
+      return res.status(400).json({ message: "User already exists" });
+
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(password, salt);
+    const newUser = {
+      id: Date.now().toString(),
+      email: normalizedEmail,
+      password: hashedPassword,
+    };
+    //save newUser into DB
+    res.status(201).json({ message: "User registered successfully" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server registration error" });
+  }
+};
+
+export const loginUser = async (req, res) => {
+  try {
+    const { email, password } = req.body;
+
+    if (!email || !password) {
+      return res
+        .status(400)
+        .json({ message: "Email and password are required" });
+    }
+
+    const normalizedEmail = email.trim().toLowerCase();
+    //find user in DB by his email
+    // const user = usersDB.find((item) => item.email === normalizedEmail);
+
+    if (!user) return res.status(400).json({ message: "Invalid credentials" });
+
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch)
+      return res.status(400).json({ message: "Invalid credentials" });
+
+    const token = jwt.sign({ id: user.id }, JWT_SECRET, {
+      expiresIn: "1h",
+    });
+    res.cookie("token", token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      maxAge: 60 * 60 * 1000,
+    });
+
+    res.status(200).json({ message: "Login successful!" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server login error" });
+  }
+};
+
+export const logoutUser = (req, res) => {
+  res.clearCookie("token", {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "lax",
+  });
+  res.status(200).json({ message: "Logged out successfully" });
+};
