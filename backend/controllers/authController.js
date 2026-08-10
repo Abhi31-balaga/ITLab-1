@@ -44,7 +44,7 @@ export const loginUser = async (req, res) => {
     const normalizedEmail = email.trim().toLowerCase();
     //find user in DB by his email
     // const user = usersDB.find((item) => item.email === normalizedEmail);
-
+    user=[]
     if (!user) return res.status(400).json({ message: "Invalid credentials" });
 
     const isMatch = await bcrypt.compare(password, user.password);
