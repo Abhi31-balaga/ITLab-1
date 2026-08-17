@@ -37,4 +37,3 @@ export async function login(req, res, next) {
     return next(e);
   }
 }
-

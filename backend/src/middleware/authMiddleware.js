@@ -28,6 +28,6 @@ export function requireRole(...roles) {
   };
 }
 
-export const requireAdmin = requireRole('ADMIN');
-export const requireExaminer = requireRole('ADMIN', 'EXAMINER');
-export const requireClient = requireRole('CLIENT', 'STUDENT');
+export const requireAdmin = requireRole("ADMIN");
+export const requireExaminer = requireRole("ADMIN", "EXAMINER");
+export const requireClient = requireRole("CLIENT", "STUDENT");

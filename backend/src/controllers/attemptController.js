@@ -10,16 +10,14 @@ export function startAttempt(req, res) {
       examId: req.params.examId,
       user: req.user,
     });
-    res
-      .status(201)
-      .json({
-        attemptId: payload.attempt.id,
-        examId: payload.attempt.examId,
-        startedAt: payload.attempt.startedAt,
-        endsAt: payload.attempt.endsAt,
-        questions: payload.questions,
-        attempt: payload.attempt,
-      });
+    res.status(201).json({
+      attemptId: payload.attempt.id,
+      examId: payload.attempt.examId,
+      startedAt: payload.attempt.startedAt,
+      endsAt: payload.attempt.endsAt,
+      questions: payload.questions,
+      attempt: payload.attempt,
+    });
   } catch (e) {
     sendError(res, e);
   }
