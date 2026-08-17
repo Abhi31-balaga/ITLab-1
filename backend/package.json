@@ -9,8 +9,11 @@
     "dev": "node src/server.js",
     "test": "node --test"
   },
-  "engines": { "node": ">=20" },
+  "engines": {
+    "node": ">=20"
+  },
   "dependencies": {
+    "dotenv": "^17.4.2",
     "express": "^4.19.2"
   }
 }
