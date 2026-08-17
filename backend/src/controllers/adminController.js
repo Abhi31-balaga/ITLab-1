@@ -1,10 +1,19 @@
-const examService = require('../services/examService');
-
-function getSummary(req, res, next) {
-  try { res.json({ data: examService.getAdminSummary() }); } catch (err) { next(err); }
+import { attempts, users } from "../data/store.js";
+import { listExams, sanitizeExam } from "../models/store.js";
+export function getSummary(req, res) {
+  res.json({
+    data: {
+      users: users.size,
+      exams: listExams().length,
+      attempts: attempts.size,
+    },
+  });
 }
-function getExams(req, res, next) {
-  try { res.json({ data: examService.listExams() }); } catch (err) { next(err); }
+export function getExams(req, res) {
+  res.json({ data: listExams().map(sanitizeExam) });
 }
-
-module.exports = { getSummary, getExams };
+export function getUsers(req, res) {
+  res.json({
+    data: Array.from(users.values()).map(({ passwordHash, ...u }) => u),
+  });
+}

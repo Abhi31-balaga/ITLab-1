@@ -1,51 +1,63 @@
-const attemptService = require('../services/attemptService');
-
+import * as attemptService from "../services/attemptService.js";
 function sendError(res, error) {
-  const statusCode = error.statusCode || 500;
-  res.status(statusCode).json({ error: error.message || 'Internal server error' });
+  res
+    .status(error.statusCode || 500)
+    .json({ error: error.message || "Internal server error" });
 }
-
-async function startAttempt(req, res) {
+export function startAttempt(req, res) {
   try {
-    const payload = attemptService.startAttempt({ examId: req.params.examId, user: req.user });
-    res.status(201).json(payload);
-  } catch (error) {
-    sendError(res, error);
-  }
-}
-
-async function getAttempt(req, res) {
-  try {
-    res.json(attemptService.getAttempt({ attemptId: req.params.attemptId, user: req.user }));
-  } catch (error) {
-    sendError(res, error);
-  }
-}
-
-async function submitAttempt(req, res) {
-  try {
-    const result = attemptService.submitAttempt({
-      attemptId: req.params.attemptId,
+    const payload = attemptService.startAttempt({
+      examId: req.params.examId,
       user: req.user,
-      answers: req.body.answers,
     });
-    res.json({ result });
-  } catch (error) {
-    sendError(res, error);
+    res
+      .status(201)
+      .json({
+        attemptId: payload.attempt.id,
+        examId: payload.attempt.examId,
+        startedAt: payload.attempt.startedAt,
+        endsAt: payload.attempt.endsAt,
+        questions: payload.questions,
+        attempt: payload.attempt,
+      });
+  } catch (e) {
+    sendError(res, e);
   }
 }
-
-async function getResult(req, res) {
+export function getAttempt(req, res) {
   try {
-    res.json({ result: attemptService.getResult({ attemptId: req.params.attemptId, user: req.user }) });
-  } catch (error) {
-    sendError(res, error);
+    res.json(
+      attemptService.getAttempt({
+        attemptId: req.params.attemptId,
+        user: req.user,
+      }),
+    );
+  } catch (e) {
+    sendError(res, e);
   }
 }
-
-module.exports = {
-  startAttempt,
-  getAttempt,
-  submitAttempt,
-  getResult,
-};
+export function submitAttempt(req, res) {
+  try {
+    res.json({
+      result: attemptService.submitAttempt({
+        attemptId: req.params.attemptId,
+        user: req.user,
+        answers: req.body.answers,
+      }),
+    });
+  } catch (e) {
+    sendError(res, e);
+  }
+}
+export function getResult(req, res) {
+  try {
+    res.json({
+      result: attemptService.getResult({
+        attemptId: req.params.attemptId,
+        user: req.user,
+      }),
+    });
+  } catch (e) {
+    sendError(res, e);
+  }
+}
