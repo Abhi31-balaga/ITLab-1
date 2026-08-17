@@ -1,10 +1,12 @@
 const express = require('express');
 const attemptController = require('../controllers/attemptController');
+const { authenticate } = require('../middleware/auth');
 
 const router = express.Router();
 
-router.get('/:attemptId', attemptController.getAttempt);
-router.post('/:attemptId/submit', attemptController.submitAttempt);
-router.get('/:attemptId/result', attemptController.getAttemptResult);
+router.post('/api/exams/:examId/start', authenticate, attemptController.startAttempt);
+router.get('/api/attempts/:attemptId', authenticate, attemptController.getAttempt);
+router.post('/api/attempts/:attemptId/submit', authenticate, attemptController.submitAttempt);
+router.get('/api/attempts/:attemptId/result', authenticate, attemptController.getResult);
 
 module.exports = router;

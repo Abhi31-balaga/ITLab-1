@@ -1,9 +1,9 @@
 const express = require('express');
-const examRoutes = require('./routes/examRoutes');
+const attemptRoutes = require('./routes/attemptRoutes');
 
 const app = express();
 
 app.use(express.json());
-app.use('/api', examRoutes);
+app.use(attemptRoutes);
 
 module.exports = app;

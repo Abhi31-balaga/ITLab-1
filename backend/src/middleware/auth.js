@@ -1,15 +1,11 @@
-function getRole(req) {
-  return req.user?.role || req.headers['x-user-role'];
-}
-
-function requireExaminer(req, res, next) {
-  const role = getRole(req);
-
-  if (role !== 'EXAMINER' && role !== 'ADMIN') {
-    return res.status(403).json({ message: 'Only examiners or admins can manage exams and questions.' });
+function authenticate(req, res, next) {
+  const userId = req.header('x-user-id');
+  const role = req.header('x-user-role');
+  if (!userId || !role) {
+    return res.status(401).json({ error: 'Authentication is required' });
   }
-
+  req.user = { id: userId, role };
   return next();
 }
 
-module.exports = { requireExaminer };
+module.exports = { authenticate };
