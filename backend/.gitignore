@@ -1,2 +1,53 @@
+<<<<<<< HEAD
 node_modules/
 .env
+=======
+# Dependencies
+
+node_modules/
+
+# Environment variables
+
+.env
+.env.local
+.env.*.local
+
+# Logs
+
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
+
+# Runtime data
+
+pids/
+*.pid
+*.seed
+*.pid.lock
+
+# Coverage
+
+coverage/
+
+# Build output
+
+dist/
+build/
+
+# OS files
+
+.DS_Store
+Thumbs.db
+
+# VS Code
+
+.vscode/
+
+# Temporary files
+
+*.tmp
+*.temp
+.cache/
+>>>>>>> e59b91d178413da62178c45187e33838f23100ae

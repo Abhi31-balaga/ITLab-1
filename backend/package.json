@@ -1,4 +1,5 @@
 {
+<<<<<<< HEAD
   "name": "backend",
   "version": "1.0.0",
   "description": "Exam System MCQ backend API",
@@ -16,5 +17,27 @@
     "dotenv": "^17.4.2",
     "express": "^4.19.2",
     "mongoose": "^9.9.3"
+=======
+  "name": "project1",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "cookie-parser": "^1.4.7",
+    "dotenv": "^16.4.5",
+    "express": "^5.2.1",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^9.9.1",
+    "nodemon": "^3.1.14"
+>>>>>>> e59b91d178413da62178c45187e33838f23100ae
   }
 }
