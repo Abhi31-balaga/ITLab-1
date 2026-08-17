@@ -1,29 +1,19 @@
 const express = require('express');
 const cors = require('cors');
-const env = require('./config/env');
 const authRoutes = require('./routes/authRoutes');
-const examRoutes = require('./routes/examRoutes');
-const questionRoutes = require('./routes/questionRoutes');
-const attemptRoutes = require('./routes/attemptRoutes');
-const adminRoutes = require('./routes/adminRoutes');
-const { notFound, errorHandler } = require('./middleware/errorMiddleware');
 
 const app = express();
 
-app.use(cors({ origin: env.corsOrigin, credentials: true }));
+app.use(cors());
 app.use(express.json());
 
-app.get('/api/health', (req, res) => {
-  res.json({ status: 'ok', timestamp: new Date().toISOString() });
-});
-
 app.use('/api/auth', authRoutes);
-app.use('/api/exams', examRoutes);
-app.use('/api/questions', questionRoutes);
-app.use('/api/attempts', attemptRoutes);
-app.use('/api/admin', adminRoutes);
 
-app.use(notFound);
-app.use(errorHandler);
+app.use((err, req, res, next) => {
+  const statusCode = err.statusCode || 500;
+  const message = statusCode === 500 ? 'Internal server error' : err.message;
+
+  res.status(statusCode).json({ message });
+});
 
 module.exports = app;
