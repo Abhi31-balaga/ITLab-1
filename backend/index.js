@@ -1,7 +1,4 @@
-<<<<<<< HEAD
-import './src/server.js';
-=======
-import express from "express";
+﻿import express from "express";
 import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
 import authRoutes from "./routes/authRoutes.js"
@@ -28,4 +25,3 @@ app.get("/health", (req, res) => {
 app.listen(PORT, () => {
   console.log(`Server running on PORT: ${PORT}`);
 });
->>>>>>> e59b91d178413da62178c45187e33838f23100ae
