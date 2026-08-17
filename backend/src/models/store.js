@@ -1,5 +1,18 @@
 import { exams, questions, nextExamId, nextQuestionId } from "../data/store.js";
 
+function canManageExam(user, exam) {
+  return user?.role === "ADMIN" || exam.createdBy === user?.id;
+}
+
+export function getQuestion(id) {
+  return questions.get(id) || null;
+}
+
+export function canManageExamResource(user, examId) {
+  const exam = getExam(examId);
+  return Boolean(exam && canManageExam(user, exam));
+}
+
 export function createExam(data) {
   const id = nextExamId();
   const exam = {

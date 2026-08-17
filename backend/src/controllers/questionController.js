@@ -36,6 +36,13 @@ export function validateQuestionPayload(body, partial = false) {
   return errors;
 }
 export function createQuestion(req, res) {
+  const exam = store.getExam(req.params.examId);
+  if (!exam) return res.status(404).json({ message: "Exam not found" });
+  if (!store.canManageExamResource(req.user, exam.id))
+    return res.status(403).json({
+      message:
+        "Only the owning examiner or an admin can add questions to this exam",
+    });
   const errors = validateQuestionPayload(req.body);
   if (errors.length) return res.status(400).json({ errors });
   const q = store.createQuestion(req.params.examId, {
@@ -44,10 +51,15 @@ export function createQuestion(req, res) {
     correctAnswer: req.body.correctAnswer,
     marks: req.body.marks ?? 1,
   });
-  if (!q) return res.status(404).json({ message: "Exam not found" });
   return res.status(201).json(q);
 }
 export function updateQuestion(req, res) {
+  const existing = store.getQuestion(req.params.questionId);
+  if (!existing) return res.status(404).json({ message: "Question not found" });
+  if (!store.canManageExamResource(req.user, existing.examId))
+    return res.status(403).json({
+      message: "Only the owning examiner or an admin can modify this question",
+    });
   const errors = validateQuestionPayload(req.body, true);
   if (errors.length) return res.status(400).json({ errors });
   const updates = {};
@@ -57,11 +69,16 @@ export function updateQuestion(req, res) {
     updates.correctAnswer = req.body.correctAnswer;
   if (hasOwn(req.body, "marks")) updates.marks = req.body.marks;
   const q = store.updateQuestion(req.params.questionId, updates);
-  if (!q) return res.status(404).json({ message: "Question not found" });
   return res.json(q);
 }
 export function deleteQuestion(req, res) {
+  const existing = store.getQuestion(req.params.questionId);
+  if (!existing) return res.status(404).json({ message: "Question not found" });
+  if (!store.canManageExamResource(req.user, existing.examId))
+    return res.status(403).json({
+      message: "Only the owning examiner or an admin can delete this question",
+    });
   const q = store.deleteQuestion(req.params.questionId);
-  if (!q) return res.status(404).json({ message: "Question not found" });
+
   return res.status(204).send();
 }

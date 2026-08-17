@@ -38,6 +38,12 @@ export function getExam(req, res) {
   return res.json(store.sanitizeExam(exam));
 }
 export function updateExam(req, res) {
+  const existing = store.getExam(req.params.examId);
+  if (!existing) return res.status(404).json({ message: "Exam not found" });
+  if (!store.canManageExamResource(req.user, existing.id))
+    return res.status(403).json({
+      message: "Only the owning examiner or an admin can modify this exam",
+    });
   const errors = validateExamPayload(req.body, true);
   if (errors.length) return res.status(400).json({ errors });
   const updates = {};
@@ -47,11 +53,15 @@ export function updateExam(req, res) {
   if (hasOwn(req.body, "isAvailable"))
     updates.isAvailable = Boolean(req.body.isAvailable);
   const exam = store.updateExam(req.params.examId, updates);
-  if (!exam) return res.status(404).json({ message: "Exam not found" });
   return res.json(exam);
 }
 export function deleteExam(req, res) {
+  const existing = store.getExam(req.params.examId);
+  if (!existing) return res.status(404).json({ message: "Exam not found" });
+  if (!store.canManageExamResource(req.user, existing.id))
+    return res.status(403).json({
+      message: "Only the owning examiner or an admin can delete this exam",
+    });
   const exam = store.deleteExam(req.params.examId);
-  if (!exam) return res.status(404).json({ message: "Exam not found" });
   return res.status(204).send();
 }
